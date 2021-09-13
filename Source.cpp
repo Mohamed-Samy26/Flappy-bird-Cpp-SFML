@@ -1,6 +1,3 @@
-/*
-<<<<<<<<<<<<<<GUI Made by Y AFK? >>>>>>>>>>>>>>>>>>>
-*/
 #include <iostream>
 //headers required by SFML
 #include <SFML/Graphics.hpp>
@@ -19,7 +16,7 @@ void createHTPwindow();
 void createPwindow();
 void AboutUs();
 bool again = false;
-//PS: tried to implement classes for options but gone with too many errors so went back to bruteforce 
+
 int main()
 {
     //Music
@@ -43,6 +40,7 @@ int main()
     //Window for GUI:-
     sf::RenderWindow window(sf::VideoMode(1366, 786), "Flappy bird", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
     sf::Event ev;
+    window.setVerticalSyncEnabled(true);
    
     //Counter to determine the indeces 
     int counterForText = 0;
