@@ -103,20 +103,20 @@ inline bool playGame()
 
     //declaration of physics variables
 
-    sf::Vector2f gravity(0, 0.3f);  //fall & jump controls 
-    sf::Vector2f velocity(0, 0.1f);
-    sf::Vector2f velocity1(0, 0.1f);
-    sf::Vector2f velocityMax(0, 1.6f);
+    sf::Vector2f gravity(0, 3.9f);  //fall & jump controls
+    sf::Vector2f velocity(0, 2.3f);
+    sf::Vector2f velocity1(0, 2.3f);
+    sf::Vector2f velocityMax(0, 40.f);
 
     float initialRot = 0.0f; //Rotation controls
-    float maxRot = 30.f;
-    float accRot = 4.5f;
+    float maxRot = 48.f;
+    float accRot = 6.f;
     sf::Clock Vclk;
     sf::Time Vvalue;
     sf::Clock Rclk;
     sf::Time Rvalue;
-    sf::Time basicDelay = sf::milliseconds(70);
-    sf::Time rapidDelay = sf::milliseconds(20);
+    sf::Time basicDelay = sf::milliseconds(30);
+    sf::Time rapidDelay = sf::milliseconds(10);
     bool jumping = false;
 
     //sounds
@@ -137,7 +137,7 @@ inline bool playGame()
 
     //Window drawing and title
     sf::RenderWindow Game(sf::VideoMode(width, windowlength), "Flappy bird");
-    //Game.setVerticalSyncEnabled(true); //too late to use
+    Game.setVerticalSyncEnabled(true); 
     //for fullscreen
     //sf::RenderWindow Game(sf::VideoMode::getDesktopMode(), "Flappy bird Fullsceen", sf::Style::Fullscreen);
 
@@ -156,7 +156,7 @@ inline bool playGame()
     float x = width / 3, y = windowlength / 1.5;
     sprite.setPosition(x, y);
     sprite.setOrigin(64, 45);
-
+    
     // back ground 
     Collision::CreateTextureAndBitmask(textures.bg, "./assets/dayf.png");
     sf::Sprite sky;
@@ -175,13 +175,9 @@ inline bool playGame()
     Collision::CreateTextureAndBitmask(textures.unpipe, "./assets/Empty.png");
     sf::Sprite unrealpipe;
     unrealpipe.setTexture(textures.unpipe);
-    unrealpipe.scale(0.00001, 1.5);
+    unrealpipe.scale(0.01f, 1.5);
     std::vector <sf::Sprite > unreal_pipe;
     std::vector <sf::Sprite >::iterator iup = unreal_pipe.begin();
-    sf::SoundBuffer unphitbuffer;
-    unphitbuffer.loadFromFile("./assets/unphit.ogg");
-    sf::Sound unphit;
-    unphit.setBuffer(unphitbuffer);
     int r; //verical distance between pipes (bad declaration name)
     std::vector <sf::Sprite> pipes;
     std::vector<sf::Sprite>::iterator itr = pipes.begin();
@@ -202,7 +198,7 @@ inline bool playGame()
     staticGround.setPosition(0, 746);
     staticGround.scale(1.2, 1);
     //control speed of pipes
-    sf::Time constanttime = sf::milliseconds(7);
+    sf::Time constanttime = sf::milliseconds(1);
     sf::Time time;
     sf::Clock clock;
     int b = 0; //horizontal distance between pipes (bad declaration name)
@@ -236,18 +232,6 @@ inline bool playGame()
     //game over
     bool drawing = false;
 
-    //coins
-
-    sf::Sprite mycoin;
-    std::vector <sf::Sprite> coins;
-    std::vector<sf::Sprite>::iterator h = coins.begin();
-    Collision::CreateTextureAndBitmask(textures.cointex, "./assets/coin_sprite.png");
-    mycoin.setTexture(textures.cointex);
-    mycoin.setScale(0.3, 0.3);
-    mycoin.setTextureRect(sf::IntRect(20, 30, 300, 310));
-    //collecting coins
-    bool draw = true;
-
     //GameOver
     Collision::CreateTextureAndBitmask(textures.GO, "./assets/GAMEOVER2.jpg");
     if (!Collision::CreateTextureAndBitmask(textures.GO, "./assets/GAMEOVER2.jpg"))
@@ -266,19 +250,19 @@ inline bool playGame()
         textures.bird[1].setSmooth(true);
         textures.bird[2].setSmooth(true);
         textures.bird[3].setSmooth(true);
-        sprite.setScale(0.8f, 0.8f);
+        sprite.setScale(0.6f, 0.6f);
         delayValue = delayCalc.getElapsedTime();
 
 
         // build pipe
 
-        if (b % 1000 == 0 && isFisrtpress)
+        if (b % 90 == 0 && isFisrtpress)
         {
             b = 0;
             r = rand() % 275 + 50;
             upperpipe.setPosition(1400, r);
             lowerpipe.setPosition(1400, r + 300);
-            unrealpipe.setPosition(1430, 0);
+            unrealpipe.setPosition(1400, 0);
             pipes.push_back(upperpipe);
             pipes.push_back(lowerpipe);
             unreal_pipe.push_back(unrealpipe);
@@ -286,24 +270,17 @@ inline bool playGame()
         b++;
 
         // build ground
-        if (c % 500 == 0 && isFisrtpress)
+        if (c % 40 == 0 && isFisrtpress)
         {
             c = 0;
             sground.push_back(GreenGRound);
         }
         c++;
 
-        //move coins
-        /*for (h = coins.begin(); h != coins.end(); h++)
-        {
-            (*h).move(-3, 0);
-        }*/
-        //clock.restart();
-
         // move ground 
         for (it = sground.begin(); it != sground.end(); it++)
         {
-            (*it).move(-0.5f, 0);
+            (*it).move(-6.3f, 0);
         }
         // move pipe
         time = clock.getElapsedTime();
@@ -318,17 +295,16 @@ inline bool playGame()
                 }
                 else
                 {
-                    (*itr).move(-3, 0);
+                    (*itr).move(-11, 0);
                     //(mycoin).move(-3, 0);
                 }
             }
-            // move unreal pipe 
+            // move unreal pipe (for score)
             for (iup = unreal_pipe.begin(); iup != unreal_pipe.end(); iup++)
             {
-                (*iup).move(-3, 0);
+                (*iup).move(-11, 0);
                 if (sprite.getGlobalBounds().intersects((*iup).getGlobalBounds()))
                 {
-                    unphit.play();
                     score++;
                 }
 
@@ -346,14 +322,14 @@ inline bool playGame()
             scoreData.close();
             std::ofstream dataUpdate("./assets/scores.txt", std::fstream::out);
 
-            if (score > 35)
+            if (score > 7)
             {
                 sc++;
                 score = 0;
             }
             std::stringstream as;
             as << sc;
-            score_text.setString(as.str());//Casting int 2 string
+            score_text.setString(as.str());//Casting int to string
             if (sc > highscore)
             {
                 highscore = sc;
@@ -405,10 +381,10 @@ inline bool playGame()
         }
 
         //jump
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y >= 0.1f /*&& delayValue >= delayHold*/ && isFisrtpress)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y >= 5.f /*&& delayValue >= delayHold*/ && isFisrtpress)
         {
             //jump (move up)
-            velocity.y = -1.25f;
+            velocity.y = -23.f;
             jumping = true;
             //flap sound
             flap.play();
@@ -466,7 +442,7 @@ inline bool playGame()
 
                 if (Rvalue >= basicDelay && initialRot > maxRot * -1 && Rvalue >= rapidDelay)
                 {
-                    initialRot -= accRot;
+                    initialRot -= 1.4*accRot;
                     Rclk.restart();
                 }
 
@@ -561,7 +537,6 @@ inline bool playGame()
                             //close button
                         case sf::Event::Closed:
                             Game.close();
-                            ~playGame();
                             gameover.close();
                             break;
                             //keyboard buttons actions :-
@@ -622,7 +597,6 @@ inline bool playGame()
                                     gameover.close();
                                     retry = false;
                                     return false;
-                                    ~playGame();
                                     break;
                                 default:
                                     break;
@@ -694,20 +668,21 @@ inline bool playGameHard()
     sf::Clock waitForPause;
 
     //declaration of physics variables
-    sf::Vector2f gravity(0, 0.3f);  //fall & jump controls 
-    sf::Vector2f velocity(0, 0.1f);
-    sf::Vector2f velocity1(0, 0.1f);
-    sf::Vector2f velocityMax(0, 1.6f);
 
-    float initialRot = 5.f; //Rotation controls
-    float maxRot = 30.f;
-    float accRot = 4.5f;
+    sf::Vector2f gravity(0, 3.9f);  //fall & jump controls
+    sf::Vector2f velocity(0, 2.3f);
+    sf::Vector2f velocity1(0, 2.3f);
+    sf::Vector2f velocityMax(0, 40.f);
+
+    float initialRot = 0.0f; //Rotation controls
+    float maxRot = 48.f;
+    float accRot = 6.f;
     sf::Clock Vclk;
     sf::Time Vvalue;
     sf::Clock Rclk;
     sf::Time Rvalue;
-    sf::Time basicDelay = sf::milliseconds(70);
-    sf::Time rapidDelay = sf::milliseconds(20);
+    sf::Time basicDelay = sf::milliseconds(30);
+    sf::Time rapidDelay = sf::milliseconds(10);
     bool jumping = false;
 
     //sounds
@@ -727,7 +702,8 @@ inline bool playGameHard()
     music.openFromFile("./assets/hmusic.ogg");
 
     //Window drawing and title
-    sf::RenderWindow Game(sf::VideoMode(width, windowlength), "Flappy bird");
+    sf::RenderWindow Game(sf::VideoMode(width, windowlength), "Flappy bird Hard");
+    Game.setVerticalSyncEnabled(true);
     //for fullscreen
     //window(sf::VideoMode::getDesktopMode(), "Flappy bird Fullsceen", sf::Style::Fullscreen); 
 
@@ -832,18 +808,6 @@ inline bool playGameHard()
     //game over
     bool drawing = false;
 
-    //coins
-    sf::Texture cointex;
-    sf::Sprite mycoin;
-    std::vector <sf::Sprite> coins;
-    std::vector<sf::Sprite>::iterator h = coins.begin();
-    Collision::CreateTextureAndBitmask(cointex, "./assets/coin_sprite.png");
-    mycoin.setTexture(cointex);
-    mycoin.setScale(0.3, 0.3);
-    mycoin.setTextureRect(sf::IntRect(20, 30, 300, 310));
-    //collecting coins
-    bool draw = true;
-
     //GameOver
     sf::Texture GO;
     Collision::CreateTextureAndBitmask(GO, "./assets/GAMEOVER2.jpg");
@@ -869,13 +833,15 @@ inline bool playGameHard()
 
         // build pipe
 
-        if (b % 1000 == 0 && isFisrtpress)
+       // build pipe
+
+        if (b % 90 == 0 && isFisrtpress)
         {
             b = 0;
             r = rand() % 275 + 50;
             upperpipe.setPosition(1400, r);
             lowerpipe.setPosition(1400, r + 300);
-            unrealpipe.setPosition(1430, 0);
+            unrealpipe.setPosition(1400, 0);
             pipes.push_back(upperpipe);
             pipes.push_back(lowerpipe);
             unreal_pipe.push_back(unrealpipe);
@@ -883,41 +849,19 @@ inline bool playGameHard()
         b++;
 
         // build ground
-        if (c % 500 == 0 && isFisrtpress)
+        if (c % 40 == 0 && isFisrtpress)
         {
             c = 0;
             sground.push_back(GreenGRound);
         }
         c++;
 
-        //build background
-
-        /* for (it = sground.begin(); it != sground.end(); it++)
-         {
-             (*it).move(-0.5f, 0);
-         }*/
-
-
-
-         //move coins
-         /*for (h = coins.begin(); h != coins.end(); h++)
-         {
-             (*h).move(-3, 0);
-         }*/
-         //clock.restart();
-
-         // move ground 
+        // move ground 
         for (it = sground.begin(); it != sground.end(); it++)
         {
-            (*it).move(-0.5f, 0);
+            (*it).move(-6.3f, 0);
         }
         // move pipe
-        //Making/OpeningFile
-        int highscore = 0;
-        std::ifstream Input;
-        Input.open("./assets/text2.txt");
-        Input >> highscore;
-        Input.close();
         time = clock.getElapsedTime();
         if (time >= constanttime && isFisrtpress)
         {
@@ -925,56 +869,50 @@ inline bool playGameHard()
             {
                 if (Collision::PixelPerfectTest(sprite, *itr)) //detect collosion with pipes
                 {
-                    std::ofstream Output("./assets/text2.txt", std::fstream::out);
-                    Output << highscore;
-                    Output.close();
                     drawing = true;
                     hit.play();
                 }
                 else
                 {
-                    (*itr).move(-3.7, 0);
-                    //(mycoin).move(-3, 0);
+                    (*itr).move(-13, 0);
                 }
             }
-            // move unreal pipe 
+            // move unreal pipe (for score)
             for (iup = unreal_pipe.begin(); iup != unreal_pipe.end(); iup++)
             {
-                (*iup).move(-3, 0);
+                (*iup).move(-11, 0);
                 if (sprite.getGlobalBounds().intersects((*iup).getGlobalBounds()))
                 {
-                    unphit.play();
                     score++;
                 }
 
             }
 
-           //calculate score + Saving highScore
+            //calculate score + Saving highScore
             int highscore = 0;
             std::ifstream scoreData;
-            scoreData.open("./assets/scores1.txt");
+            scoreData.open("./assets/scores.txt");
             if (!scoreData.is_open())
                 std::cout << "File coulnd't load";
             else
                 scoreData >> highscore;
 
             scoreData.close();
-            std::ofstream dataUpdate("./assets/scores1.txt", std::fstream::out);
+            std::ofstream dataUpdate("./assets/scores.txt", std::fstream::out);
 
-            if (score > 35)
+            if (score > 9)
             {
                 sc++;
                 score = 0;
             }
             std::stringstream as;
             as << sc;
-            score_text.setString(as.str());//Casting int 2 string
+            score_text.setString(as.str());//Casting int to string
             if (sc > highscore)
             {
                 highscore = sc;
                 dataUpdate << highscore;
                 dataUpdate.close();
-
             }
             else
                 dataUpdate << highscore;
@@ -1027,10 +965,10 @@ inline bool playGameHard()
         }
 
         //jump
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y >= 0.1f /*&& delayValue >= delayHold*/ && isFisrtpress)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y >= 5.f /*&& delayValue >= delayHold*/ && isFisrtpress)
         {
             //jump (move up)
-            velocity.y = -1.25f;
+            velocity.y = -23.f;
             jumping = true;
             //flap sound
             flap.play();
@@ -1088,7 +1026,7 @@ inline bool playGameHard()
 
                 if (Rvalue >= basicDelay && initialRot > maxRot * -1 && Rvalue >= rapidDelay)
                 {
-                    initialRot -= accRot;
+                    initialRot -= 1.4 * accRot;
                     Rclk.restart();
                 }
 
@@ -1269,21 +1207,13 @@ inline bool playGameHard()
                     gameover.draw(Title);
                     for (int i = 0; i < 2; i++)
                         gameover.draw(text[i]);
-                    gameover.display ();
+                    gameover.display();
                 }
             }
             if (retry == false)
             {
                 break;
             }
-            //if (isFisrtpress)
-            //{
-            //    //draw coins
-            //    for (h = coins.begin(); h != coins.end(); h++)
-            //    {
-            //        window.draw(*h);
-            //    }
-            //}
             Game.display();
         }
     }
