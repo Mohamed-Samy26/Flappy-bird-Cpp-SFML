@@ -1,7 +1,6 @@
 # Flappy_bird_SP_project
 A Remake for the classic fan favorite pixel art game `Flappy bird` using C++ and SFML library 
-the code can compile to both `Windows` and `Linux` as there is no OS specific code
-the source code is currently private
+the code can compile to both `Windows` and `Linux` as there is no OS specific code.
 
 ## Gameplay 
 [![vid](https://github.com/Mohamed-Samy26/Flappy_bird_SP_project/blob/main/THumb.jpg)](https://www.youtube.com/watch?v=rDUfRAu-l10)
