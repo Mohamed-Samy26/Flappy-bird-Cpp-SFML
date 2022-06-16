@@ -1,8 +1,9 @@
 # Flappy_bird_SP_project
-A Remake for the classic fan favorite pixel art game `Flappy bird` using C++ and SFML library 
+A Remake for the classic fan favorite pixel art game `Flappy bird` using C++ and SFML library with custom made physics that emulates real life acceleration due to gravity.
 the code can compile to both `Windows` and `Linux` as there is no OS specific code.
 
 ## Gameplay 
+
 [![vid](https://github.com/Mohamed-Samy26/Flappy_bird_SP_project/blob/main/THumb.jpg)](https://www.youtube.com/watch?v=rDUfRAu-l10)
 
 click on previous image for video or click [here](https://www.youtube.com/watch?v=rDUfRAu-l10&t=20s) 
